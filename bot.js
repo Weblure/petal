@@ -12,6 +12,7 @@ var math = require('mathjs'); // load math.js
 //Connect client
 client.on('ready', () => {
   console.log('Client Instantiated.');
+  console.log('Petal ' + clientInfo.version);
 });
 
 // Authenticate login
@@ -121,7 +122,7 @@ client.on('guildMemberRemove', member => {
 var clientInfo = {};
 clientInfo.cmdChar = "~";
 clientInfo.name = "Petal";
-clientInfo.version = "Gene A3, Seed 13, Iteration 2";
+clientInfo.version = "Gene A3, Seed 13, Iteration 3";
 clientInfo.started = new Date();
 
 var userInfo = {
