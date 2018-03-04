@@ -121,7 +121,7 @@ client.on('guildMemberRemove', member => {
 var clientInfo = {};
 clientInfo.cmdChar = "~";
 clientInfo.name = "Petal";
-clientInfo.version = "Gene A3, Seed 12, Iteration 62";
+clientInfo.version = "Gene A3, Seed 13, Iteration 2";
 clientInfo.started = new Date();
 
 var userInfo = {
@@ -178,22 +178,6 @@ function runCommand(message) {
 		rank = userInfo.ranks[message.author.id];
 	}
 
-	if (invokedCmd == "why59") {
-		var channelID = "286564602731429899";
-		suffixes.suffixRaw.shift();
-		client.channels.get(channelID).send(suffixes.suffixRaw.join(' '));
-	}
-
-	if (1==2) {
-
-		var embed = {};
-		embed.title = "FATAL_ERROR";
-		embed.description = "`SystemError: FATAL_DATA_LOSS\nat System32\nat createScript (vm.js:56:10)\nat Object.runInThisContext (vm.js:97:10)\nat Module._compile (module.js:542:28)\nat Object.Module._extensions..js (module.js:579:10)\nat Module.load (module.js:487:32)\nat tryModuleLoad (module.js:446:12)\nat Function.Module._load (module.js:438:3)\nat Module.runMain (module.js:604:10)\nat run (bootstrap_node.js:389:7)\nat startup (bootstrap_node.js:149:9)`"
-		embed.color = 0xff0000;
-
-		embedify(message.channel, embed)
-
-	}
 
 	else if (commands[invokedCmd]) {
 
@@ -695,7 +679,7 @@ commands.tod = {
 					var text = "Here is who's in the game:\n`";
 
 					for (i = 0; i < Object.keys(todObj[guildID].players).length; i++) {
-						text = text + todObj[guildID].players[Object.keys(todObj[guildID].players)[i]] + " [" + todObj[guildID].points[message.author.id] + " pnts]";
+						text = text + todObj[guildID].players[Object.keys(todObj[guildID].players)[i]] + " [" + todObj[guildID].points[message.author.id] + " pts]";
 						if (i != (Object.keys(todObj[guildID].players).length - 1))
 							text = text + "\n";
 					}
@@ -729,9 +713,9 @@ commands.tod = {
 						if (suffixes.suffix[2]) {
 
 							if (todObj[guildID].currentRound.waiting[suffixes.suffix[2]]) {
-								todObj[guildID].points[suffixes.suffix[2]] = (todObj[guildID].points[suffixes.suffix[2]] + 1);
+								todObj[guildID].points[suffixes.suffix[2]]+=1;
 								message.channel.send("**<@"+suffixes.suffix[2]+ ">, Truth or Dare?**\nYou were picked by <@" + message.author.id + ">.");
-								todObj[guildID].currentRound.currentUser = suffixes.suffix[2];
+								todObj[guildID].currentRound.currentUser = todObj[guildID].players[suffixes.suffix[2]];
 								delete todObj[guildID].currentRound.waiting[suffixes.suffix[2]];
 								console.log(todObj[guildID].points);
 							}
@@ -744,9 +728,9 @@ commands.tod = {
 									selection = selectList[rndInt(0,(selectList.length -1))];
 									console.log("ToD Selection Bounced.")
 								}
-								todObj[guildID].points[suffixes.suffix[2]] = (todObj[guildID].points[suffixes.suffix[2]] + 1);
+								todObj[guildID].points[suffixes.suffix[2]]+=1;
 								message.channel.send("**<@"+selection+ ">, Truth or Dare?**\nYou were randomly picked by <@" + message.author.id + ">.");
-								todObj[guildID].currentRound.currentUser = selection;
+								todObj[guildID].currentRound.currentUser = todObj[guildID].players[selection];
 								delete todObj[guildID].currentRound.waiting[selection];
 								console.log(todObj[guildID].points);
 							}
@@ -783,7 +767,7 @@ commands.tod = {
 
 			else if(suffixes.suffix[1] == "skip") {
 
-				todObj[guildID].points[message.author.id] = todObj[guildID].points[message.author.id] - 1;
+				todObj[guildID].points[message.author.id]-=1;
 
 				var selectList = Object.keys(todObj[guildID].currentRound.waiting);
 				var selection = selectList[rndInt(0,(selectList.length -1))];
@@ -791,8 +775,8 @@ commands.tod = {
 					selection = selectList[rndInt(0,(selectList.length -1))];
 					console.log("ToD Selection Bounced.")
 				}
-				todObj[guildID].points[suffixes.suffix[2]] = (todObj[guildID].points[suffixes.suffix[2]] + 1);
-				message.channel.send("Point forfeited~!\n**<@"+selection+ ">, Truth or Dare?**\nYou were randomly select since <@" + message.author.id + "> skipped their turn.\n**First come first serve~!**");
+				todObj[guildID].points[suffixes.suffix[2]]+=1;
+				message.channel.send("Point forfeited~!\n**<@"+selection+ ">, Truth or Dare?**\nYou were randomly select since <@" + message.author.id + "> skipped their turn.\n**First come first serve!** Somebody give them a Truth or Dare~!");
 				todObj[guildID].currentRound.currentUser = selection;
 				delete todObj[guildID].currentRound.waiting[selection];
 				console.log(todObj[guildID].points);
@@ -1219,6 +1203,19 @@ commands.eval = {
 		var evalString = suffixes.suffixRaw.join(' ')
 
 		message.channel.send("```" + eval(evalString) + "```");
+	}
+}
+
+commands.kill = {
+	name: "kill",
+	help: "Restricted.",
+	aliases: [],
+	usage: "Kills the bot",
+	level: 5,
+	fn: function (suffixes, message) {
+    client.destroy((err) => {
+        console.log(err);
+    });
 	}
 }
 
